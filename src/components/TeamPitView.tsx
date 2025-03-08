@@ -1,7 +1,6 @@
 'use client'
 
-import * as d3 from "d3" ;
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 type Props = {
     teams: PitViewTeam[]
@@ -13,8 +12,6 @@ export type PitViewTeam = {
 }
 
 export default function TeamPitView({teams}: Props){
-    const height = 10
-    const width = 30
     const pitViewRef = useRef(null)
 
     const teamPositions = {
