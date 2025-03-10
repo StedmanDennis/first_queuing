@@ -10,8 +10,12 @@ export type AddSchool = Omit<School, 'id'>
 
 //hooks
 export function useSchools(){
-    const [schoolIdSequence, setSchoolIdSequence] = useLocalStorage<number>("schoolSequence", 0)
-    const [schools, setSchools] = useLocalStorage<School[]>("schools", [])
+    const [localSchoolIdSequence, setSchoolIdSequence] = useLocalStorage<number>("schoolSequence")
+    const [localSchools, setSchools] = useLocalStorage<School[]>("schools")
+
+    const schoolIdSequence = localSchoolIdSequence ?? 0
+    const schools = localSchools ?? []
+
     function addSchool(newSchool: AddSchool){
         const newSchoolId = schoolIdSequence+1
         setSchools([...schools, {id: newSchoolId,...newSchool}])
