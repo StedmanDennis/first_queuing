@@ -51,7 +51,7 @@ export default function TeamManagementTable(){
                     </TableRow>))
                     ) : (
                     <TableRow>
-                        <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
+                        <TableCell colSpan={table.getAllColumns().length+1} className="h-24 text-center">
                             No data
                         </TableCell>
                     </TableRow>
