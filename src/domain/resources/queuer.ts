@@ -9,7 +9,7 @@ export type Queuer = {
 export type AddQueuer = Omit<Queuer, 'id'>
 
 //hooks
-export default function useQueuers(){
+export function useQueuers(){
     const [queuerIdSequence, setQueuerIdSequence] = useLocalStorage<number>("queuerSequence", 0)
     const [queuers, setQueuers] = useLocalStorage<Queuer[]>("queuers", Array.from({length: 10}, (_,i) => ({id:1, name: (i+1).toString()})))
     function addQueuer(newQueuer: AddQueuer){
