@@ -12,12 +12,14 @@ export type QueuingTeam = Team & {queuingStatus: 'Queuing | Queued', assignedQue
 
 //hooks
 export function useTeams(){
-    const [teams, setTeams] = useLocalStorage<Team[]>("teams", [])
+    const [localTeams, updateTeams] = useLocalStorage<Team[]>("teams")
+    const teams = localTeams ?? []
+    
     function addTeam(newTeam: AddTeam){
-        setTeams([...teams, newTeam])
+        updateTeams([...teams, newTeam])
     }
     function removeTeam(id: number){
-        setTeams(teams.filter(t => t.teamNumber != id))
+        updateTeams(teams.filter(t => t.teamNumber != id))
     }
     return {teams, addTeam, removeTeam}
 }

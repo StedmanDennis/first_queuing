@@ -10,11 +10,16 @@ export type AddQueuer = Omit<Queuer, 'id'>
 
 //hooks
 export function useQueuers(){
-    const [queuerIdSequence, setQueuerIdSequence] = useLocalStorage<number>("queuerSequence", 0)
-    const [queuers, setQueuers] = useLocalStorage<Queuer[]>("queuers", Array.from({length: 10}, (_,i) => ({id:1, name: (i+1).toString()})))
+    const [localQueuerIdSequence, setQueuerIdSequence] = useLocalStorage<number>("queuerSequence")
+    const [localQueuers, setQueuers] = useLocalStorage<Queuer[]>("queuers")
+
+    const queuerIdSequence = localQueuerIdSequence ?? 0
+    const queuers = localQueuers ?? []
+
     function addQueuer(newQueuer: AddQueuer){
-        setQueuers([...queuers, {id: 10+queuerIdSequence+1,...newQueuer}])
-        setQueuerIdSequence(queuerIdSequence+1)
+        const newQueuerId = queuerIdSequence+1
+        setQueuers([...queuers, {id: newQueuerId,...newQueuer}])
+        setQueuerIdSequence(newQueuerId)
     }
     function removeQueuer(id: number){
         setQueuers(queuers.filter(t => t.id != id))
