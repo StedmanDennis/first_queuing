@@ -1,26 +1,40 @@
 'use client'
 
-import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { Button } from "./ui/button"
-import { useTeams } from "@/domain/resources/team"
+import { Team, useTeams } from "@/domain/resources/team"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
+import { useSchools } from "@/domain/resources/school"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 
 export default function TeamManagementTable(){
     const {teams, addTeam, removeTeam} = useTeams()
+    const {schools} = useSchools()
+
+    const columnhelper = createColumnHelper<Team>()
+
     const table = useReactTable({
         data: teams,
         columns: [
-            {
-                accessorKey: 'teamNumber',
+            columnhelper.accessor('teamNumber',{
                 header: 'Team number'
-            },
-            {
-                accessorKey: 'name',
+            }),
+            columnhelper.accessor('name',{
                 header: 'Team name'
-            }
+            }),
+            columnhelper.display({
+                id: 'actions',
+                header: 'Actions',
+                cell: (props) => (
+                <div className="grid grid-rows-2 gap-y-1 sm:flex gap-x-1">
+                    <Button className='bg-blue-600'>Edit</Button>
+                    <Button className='bg-red-600' onClick={()=>removeTeam(props.row.getValue('teamNumber'))}>Delete</Button>
+                </div>)
+            })
+            
         ],
         getCoreRowModel: getCoreRowModel()
     })
@@ -33,25 +47,20 @@ export default function TeamManagementTable(){
                         {table.getLeafHeaders().map((header) => (
                             <TableHead key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</TableHead>
                         ))}
-                        <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {table.getRowModel().rows?.length ? (table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                    {table.getRowModel().rows.length ? (table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id}>
                         {row.getVisibleCells().map((cell) => (
                             <TableCell key={cell.id}>
                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                             </TableCell>
                         ))}
-                        <TableCell className="grid grid-rows-2 gap-y-1 sm:flex gap-x-1">
-                            <Button className='bg-blue-600'>Edit</Button>
-                            <Button className='bg-red-600' onClick={()=>removeTeam(row.getValue('teamNumber'))}>Delete</Button>
-                        </TableCell>
                     </TableRow>))
                     ) : (
                     <TableRow>
-                        <TableCell colSpan={table.getAllColumns().length+1} className="h-24 text-center">
+                        <TableCell colSpan={table.getVisibleLeafColumns().length} className="h-24 text-center">
                             No data
                         </TableCell>
                     </TableRow>
@@ -70,7 +79,8 @@ export default function TeamManagementTable(){
                     <form onSubmit={(e)=>{
                             e.preventDefault()
                             const data = new FormData(e.target as HTMLFormElement)
-                            addTeam({schoolId: 1, teamNumber: parseInt(data.get('teamNumber')!.valueOf() as string), name: data.get('teamName')!.valueOf() as string})
+                            console.log(Array.from(data.entries()))
+                            addTeam({schoolId: parseInt(data.get('school')!.valueOf() as string), teamNumber: parseInt(data.get('teamNumber')!.valueOf() as string), name: data.get('teamName')!.valueOf() as string})
                         }}>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -85,13 +95,27 @@ export default function TeamManagementTable(){
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="teamName" className="text-right">
-                            Team Name
+                                Team Name
                             </Label>
                             <Input
                             id="teamName"
                             name="teamName"
                             className="col-span-3"
                             />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="school" className="text-right">
+                                School
+                            </Label>
+                            <Select name="school">
+                                <SelectTrigger id="school" className="w-[180px]">
+                                    <SelectValue placeholder="Select a school" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {schools.map(school => (<SelectItem key={school.id} value={school.id.toString()}>{school.name}</SelectItem>))}
+                                </SelectContent>
+                            </Select>
+                            
                         </div>
                     </div>
                     <DialogFooter>

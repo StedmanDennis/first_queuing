@@ -15,14 +15,17 @@ export default function SchoolManagementTable(){
 
     const table = useReactTable({
         data: schools,
+        initialState: {
+            columnVisibility:{
+                id: false
+            }
+        },
         columns: [
             columnhelper.accessor('id',{
-                header: 'Identifier',
-                cell: col => col.getValue(),
+                header: 'Identifier'
             }),
             columnhelper.accessor('name',{
-                header: 'School name',
-                cell: col => col.getValue(),
+                header: 'School name'
             }),
             columnhelper.display({
                 id: 'actions',
@@ -49,7 +52,7 @@ export default function SchoolManagementTable(){
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {table.getRowModel().rows?.length ? (table.getRowModel().rows.map((row) => (
+                    {table.getRowModel().rows.length ? (table.getRowModel().rows.map((row) => (
                     <TableRow key={row.id}>
                         {row.getVisibleCells().map((cell) => (
                             <TableCell key={cell.id}>
@@ -59,7 +62,7 @@ export default function SchoolManagementTable(){
                     </TableRow>))
                     ) : (
                     <TableRow>
-                        <TableCell colSpan={table.getAllColumns().length+1} className="h-24 text-center">
+                        <TableCell colSpan={table.getVisibleLeafColumns().length} className="h-24 text-center">
                             No data
                         </TableCell>
                     </TableRow>
