@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
+import ResourceProvider from "@/components/ResourceProvider";
 
 
 const geistSans = Geist({
@@ -34,7 +35,9 @@ export default function RootLayout({
           <AppSidebar />
           <SidebarTrigger />
           <main className="h-screen w-full">
-            {children}
+            <ResourceProvider>
+              {children}
+            </ResourceProvider>
           </main>
         </SidebarProvider>
       </body>

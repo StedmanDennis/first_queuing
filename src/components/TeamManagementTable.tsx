@@ -3,11 +3,11 @@
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { Button } from "./ui/button"
-import { Team, useTeams } from "@/domain/resources/team"
+import { Team, useTeams } from "@/lib/domain/resources/team"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
-import { useSchools } from "@/domain/resources/school"
+import { useSchools } from "@/lib/domain/resources/school"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 
 export default function TeamManagementTable(){
@@ -108,7 +108,7 @@ export default function TeamManagementTable(){
                                 School
                             </Label>
                             <Select name="school">
-                                <SelectTrigger id="school" className="w-[180px]">
+                                <SelectTrigger id="school">
                                     <SelectValue placeholder="Select a school" />
                                 </SelectTrigger>
                                 <SelectContent>
