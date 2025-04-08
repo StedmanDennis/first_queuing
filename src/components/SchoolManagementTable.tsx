@@ -2,11 +2,11 @@
 
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
-import { Button } from "./ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 import { School, SchoolContext } from "@/lib/domain/resources/school"
 import { useContext, useState } from "react"
 import AddSchoolForm from "./AddSchoolForm"
+import ResourceTableActionColumn from "./ResourceTableActionColumn"
 
 export default function SchoolManagementTable() {
     const { schools, removeSchool } = useContext(SchoolContext)
@@ -32,10 +32,9 @@ export default function SchoolManagementTable() {
                 id: 'actions',
                 header: 'Actions',
                 cell: (props) => (
-                    <div className="grid grid-rows-2 gap-y-1 sm:flex gap-x-1">
-                        <Button className='bg-blue-600'>Edit</Button>
-                        <Button className='bg-red-600' onClick={() => removeSchool(props.row.getValue('id'))}>Delete</Button>
-                    </div>
+                    <ResourceTableActionColumn
+                        deleteAction={() => removeSchool(props.row.getValue('id'))}>
+                    </ResourceTableActionColumn>
                 )
             })
 
