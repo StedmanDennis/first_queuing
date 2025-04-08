@@ -1,21 +1,18 @@
+import { localStorageGet, localStorageSet } from "@/lib/storage";
 import { useCallback, useEffect, useState } from "react";
 
 function useLocalStorage<T>(key: string) {
   const [value, setValue] = useState<T | null>(null)
 
   const updateValue = useCallback((value: T) => {
-    if (typeof value === 'string'){
-      localStorage.setItem(key, value)
-    } else {
-      localStorage.setItem(key, JSON.stringify(value))
-    } 
+    localStorageSet(key, value)
     setValue(value)
   }, [key])
 
   useEffect(() => {
-    const browserValue = localStorage.getItem(key)
-    if (browserValue !== null){
-      updateValue(JSON.parse(browserValue))
+    const value = localStorageGet<T>(key)  
+    if (value !== null){
+      updateValue(value)
     }
   }, [key, updateValue])
 

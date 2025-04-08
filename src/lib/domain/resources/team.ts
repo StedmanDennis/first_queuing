@@ -1,4 +1,6 @@
 import useLocalStorage from "@/hooks/use-local-storage"
+import { z } from "zod"
+import { School } from "./school"
 
 //types
 export type Team = {
@@ -8,7 +10,15 @@ export type Team = {
 }
 
 export type AddTeam = Team
-export type QueuingTeam = Team & {queuingStatus: 'Queuing | Queued', assignedQueuerId: number | undefined}
+export type QueuingTeam = Team & {queuingStatus: 'Queuing | Queued', assignedQueuerId: number | null}
+
+//parsers
+export const teamSchema = (schools: School[]) => z.object({
+    teamNumber: z.number(),
+    schoolId: z.number().refine(
+        (val) => schools.some((school) => school.id === val)
+    )
+})
 
 //hooks
 export function useTeams(){
